@@ -30,19 +30,6 @@ class Kernel extends ConsoleKernel
             ->select('address_id')
             ->get();
 
-            if (empty($ids)) {
-                $backup = DB::table('address')
-                    ->select('id as address_id', 'name', 'email', 'address_1', 'address_2', 'mobile', 'city', 'state', 'pincode')
-                    ->get();
-
-                $backupJson = json_encode($backup);
-                $backup = json_decode($backupJson, true);
-
-                DB::table('old_address')
-                    ->insert($backup);                       
-            }
-            else{
-
                 $idsJson = json_encode($ids);
                 $ids = json_decode($idsJson, true);
 
@@ -72,7 +59,6 @@ class Kernel extends ConsoleKernel
                         ->where('address_id', $toUpdate['address_id'])
                         ->update($toUpdate);
                 }
-            }
         })->hourly();
                  
     }
