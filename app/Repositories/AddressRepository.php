@@ -19,6 +19,7 @@ class AddressRepository {
             return $addressId;
         }
         else{
+            $data['is_copied'] = 0;
             $updated = $this->update($data);
             return $updated;
         }
