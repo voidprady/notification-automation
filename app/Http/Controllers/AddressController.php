@@ -44,15 +44,21 @@ class AddressController extends Controller
     public function store()
     {
         $input = Request::json()->all();
+        $errors = $this->addressGateway->validateInput($input);
+        if(!empty($errors)){
+            return [
+                'status' => 'FAIL',
+                'message' => [$errors]
+            ];
+        }
         $data = $this->addressGateway->createAddress($input);
 
-        if($data){
+        if($data !=0){
             return [
                 'status' => 'SUCCESS',
                 'message' => 'Please check your inbox for confimation.'
             ];
-        }
-        else{
+        }else{
             return [
                 'status' => 'FAIL',
                 'message' => 'There is already an account with these details.'
