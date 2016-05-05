@@ -18,30 +18,19 @@ class AddressGateway
     }
 
     public function createAddress(array $data){
-
         $addressId = $this->addressRepository->create($data);
         if($addressId){
-            try {
-                $this->mailUser($data);    
-            } catch (Exception $e) {
-                return [
-                    'status' => 'FAIL',
-                    'message' => 'Failed sending message.'
-                ];
-            }
+            $this->mailUser($data);
         }
 
         return $addressId;
     }
 
     public function mailUser(array $data){
-        $userDetails = $this->addressRepository->getByEmailId($data['email']);
-        
-        Mail::send('mails.confirm', ['user' => $userDetails->name], function ($message) use ($userDetails) {
-
-            $message->to($userDetails->email, $userDetails->name)->subject('Welcome to Finder');
+        Mail::send('mails.confirm', ['user' => $data['name']], function ($message) use ($data) {
+            $message->to($data['email'], $data['name'])->subject('Welcome to Finder');
         });
-        return $userDetails;
+        return 1;
     }
 
     public function validateInput(array $data){
